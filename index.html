@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NOOR RAG — RAG Document Intelligence | Hafiz Farrukh Abbas</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- PDF.js for real PDF parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+  <div class="app">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">⚖</div>
+        <div>
+          <h1>NOOR RAG — Document Intelligence</h1>
+          <p>RAG-Powered Legal Analysis · Built by Hafiz Farrukh Abbas</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <span class="badge rag">RAG Workflow</span>
+        <span class="badge cited">Citation-Grounded</span>
+      </div>
+    </header>
+
+    <!-- MAIN LAYOUT -->
+    <div class="main-layout">
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <h3 class="section-label">Document</h3>
+          <div class="upload-zone" id="uploadZone">
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+            </svg>
+            <p>Upload PDF contract</p>
+            <span>or drag &amp; drop · Max 50MB</span>
+            <input type="file" id="fileInput" accept=".pdf" hidden />
+            <button class="upload-btn" id="uploadBtn">Choose File</button>
+          </div>
+          <div class="doc-loaded hidden" id="docLoaded">
+            <div class="doc-info">
+              <span class="pdf-icon">📄</span>
+              <div>
+                <div class="doc-name" id="docName">—</div>
+                <div class="doc-meta" id="docMeta">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <h3 class="section-label">Document Stats</h3>
+          <div class="stat-row">
+            <div class="stat"><div class="stat-num" id="statPages">—</div><div class="stat-lbl">Pages</div></div>
+            <div class="stat"><div class="stat-num" id="statWords">—</div><div class="stat-lbl">Words</div></div>
+            <div class="stat"><div class="stat-num" id="statRisks">—</div><div class="stat-lbl">Risks</div></div>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <h3 class="section-label">API Status</h3>
+          <div class="api-status" id="apiStatus">
+            <span class="status-dot idle"></span>
+            <span class="status-text">Ready</span>
+          </div>
+          <div class="api-note">
+            Claude API key is injected at runtime via <code>ANTHROPIC_API_KEY</code> env variable. Never expose in client-side code.
+          </div>
+        </div>
+
+        <div class="sidebar-section grow">
+          <h3 class="section-label">Auto-Analyze</h3>
+          <p class="hint-text">Automatically extract risks, key dates, and stakeholders from the document using structured prompts.</p>
+          <button class="analyze-btn" id="analyzeBtn" disabled>
+            🔍 Run Full Analysis
+          </button>
+        </div>
+      </aside>
+
+      <!-- CONTENT AREA -->
+      <div class="content">
+        <div class="tabs">
+          <button class="tab active" data-panel="chat">💬 Ask Document</button>
+          <button class="tab" data-panel="dash">📊 Summary Dashboard</button>
+          <button class="tab" data-panel="raw">📋 Extracted Text</button>
+        </div>
+
+        <!-- CHAT PANEL -->
+        <div class="panel active" id="panel-chat">
+          <div class="chat-messages" id="chatMessages">
+            <div class="no-doc-state" id="noDocState">
+              <div class="no-doc-icon">📁</div>
+              <p>Upload a PDF to start asking citation-grounded questions</p>
+            </div>
+          </div>
+
+          <div class="chat-input-area">
+            <div class="suggested-questions" id="suggestedQuestions" style="display:none;">
+              <span class="sug-label">Suggested:</span>
+              <button class="sug-btn">What are the payment terms?</button>
+              <button class="sug-btn">Who are the parties involved?</button>
+              <button class="sug-btn">List all key obligations</button>
+              <button class="sug-btn">What are the termination conditions?</button>
+              <button class="sug-btn">Summarize indemnification clauses</button>
+            </div>
+            <div class="input-row">
+              <textarea
+                id="chatInput"
+                placeholder="Ask any question — every answer will cite the exact page and section..."
+                rows="1"
+                disabled
+              ></textarea>
+              <button class="send-btn" id="sendBtn" disabled>↗</button>
+            </div>
+            <div class="input-note">RAG-enforced: all answers grounded in document text · No hallucinations</div>
+          </div>
+        </div>
+
+        <!-- DASHBOARD PANEL -->
+        <div class="panel" id="panel-dash">
+          <div class="dashboard" id="dashContent">
+            <div class="no-doc-state">
+              <div class="no-doc-icon">📊</div>
+              <p>Run analysis to populate the Summary Dashboard</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- RAW TEXT PANEL -->
+        <div class="panel" id="panel-raw">
+          <div class="raw-text-area" id="rawTextArea">
+            <div class="no-doc-state">
+              <div class="no-doc-icon">📋</div>
+              <p>Upload a PDF to view extracted text</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
